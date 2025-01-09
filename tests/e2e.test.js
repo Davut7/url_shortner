@@ -5,7 +5,7 @@ describe('Short URL API', () => {
 	let shortUrl;
 
 	it('should create a short URL', async () => {
-		const response = await request(app).post('/api/shorten').send({
+		const response = await request(app).post('/shorten').send({
 			originalUrl: 'https://example.com',
 			alias: 'testlink',
 			expiresAt: '2026-01-01T00:00:00.000Z',
@@ -18,7 +18,7 @@ describe('Short URL API', () => {
 
 	it('should redirect to the original URL', async () => {
 		const response = await request(app).get(
-			`/api/${shortUrl.split('/').pop()}`
+			`/${shortUrl.split('/').pop()}`
 		);
 
 		expect(response.status).toBe(302);
@@ -27,7 +27,7 @@ describe('Short URL API', () => {
 
 	it('should get information about the short URL', async () => {
 		const response = await request(app).get(
-			`/api/info/${shortUrl.split('/').pop()}`
+			`/info/${shortUrl.split('/').pop()}`
 		);
 
 		expect(response.status).toBe(200);
@@ -37,10 +37,10 @@ describe('Short URL API', () => {
 	});
 
 	it('should get analytics for the short URL', async () => {
-		await request(app).get(`/api/${shortUrl.split('/').pop()}`);
+		await request(app).get(`/${shortUrl.split('/').pop()}`);
 
 		const response = await request(app).get(
-			`/api/analytics/${shortUrl.split('/').pop()}`
+			`/analytics/${shortUrl.split('/').pop()}`
 		);
 
 		expect(response.status).toBe(200);
@@ -50,7 +50,7 @@ describe('Short URL API', () => {
 
 	it('should delete the short URL', async () => {
 		const response = await request(app).delete(
-			`/api/delete/${shortUrl.split('/').pop()}`
+			`/delete/${shortUrl.split('/').pop()}`
 		);
 
 		expect(response.status).toBe(200);
@@ -59,7 +59,7 @@ describe('Short URL API', () => {
 
 	it('should return 404 after deleting the short URL', async () => {
 		const response = await request(app).get(
-			`/api/info/${shortUrl.split('/').pop()}`
+			`/info/${shortUrl.split('/').pop()}`
 		);
 
 		expect(response.status).toBe(404);

@@ -133,10 +133,6 @@ app.post('/shorten', async (req, res) => {
 
 	const { originalUrl, alias, expiresAt } = value;
 
-	console.log('Received originalUrl:', req.body.originalUrl);
-	console.log('Received alias:', req.body.alias);
-	console.log('Received expiresAt:', req.body.expiresAt);
-
 	let expiresAtDate = expiresAt ? moment.utc(expiresAt) : null;
 
 	const shortUrl = await ensureUniqueShortUrl(alias);
@@ -185,13 +181,11 @@ app.get('/:shortUrl', async (req, res) => {
 	}
 
 	const currentTimeUtc = moment().utc();
-	console.log('🚀 ~ app.get ~ currentTimeUtc:', currentTimeUtc);
 
 	const expirationTimeUtc = link.expiresAt
 		? moment.utc(link.expiresAt)
 		: null;
 
-	console.log('🚀 ~ app.get ~ expirationTimeUtc:', expirationTimeUtc);
 	if (expirationTimeUtc && currentTimeUtc.isAfter(expirationTimeUtc)) {
 		return res.status(410).json({ error: 'Link expired' });
 	}

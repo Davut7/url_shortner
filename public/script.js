@@ -20,11 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		const shortenedUrlSpan = document.getElementById('shortened-url');
 		const copyButton = document.getElementById('copy-button');
 
-		// Convert expiresAt to UTC if provided
 		let expiresAtUtc = null;
 		if (expiresAt.value) {
-			expiresAtUtc = new Date(expiresAt.value).toISOString(); // Correctly assign the UTC value
-			console.log('Client-side expiresAt (UTC):', expiresAtUtc);
+			expiresAtUtc = new Date(expiresAt.value).toISOString();
 		}
 
 		const response = await fetch(`${backendUrl}/shorten`, {
@@ -33,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			body: JSON.stringify({
 				originalUrl: originalUrl.value,
 				alias: alias.value ? alias.value : undefined,
-				expiresAt: expiresAtUtc, // Send the correct UTC value
+				expiresAt: expiresAtUtc,
 			}),
 		});
 
