@@ -13,11 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	shortenForm.addEventListener('submit', async (e) => {
 		e.preventDefault();
+
 		const originalUrl = document.getElementById('originalUrl');
 		const alias = document.getElementById('alias');
 		const expiresAt = document.getElementById('expiresAt');
 		const shortenedUrlSpan = document.getElementById('shortened-url');
 		const copyButton = document.getElementById('copy-button');
+
+		let expiresAtUtc = null;
+		if (expiresAt.value) {
+			const localTime = new Date(expiresAt.value);
+			expiresAtUtc = new Date(
+				localTime.getTime() + localTime.getTimezoneOffset() * 60000
+			).toISOString();
+		}
 
 		const response = await fetch(`${backendUrl}/shorten`, {
 			method: 'POST',
@@ -25,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			body: JSON.stringify({
 				originalUrl: originalUrl.value,
 				alias: alias.value ? alias.value : undefined,
-				expiresAt: expiresAt.value ? expiresAt.value : undefined,
+				expiresAt: expiresAtUtc,
 			}),
 		});
 

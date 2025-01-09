@@ -179,7 +179,9 @@ app.get('/:shortUrl', async (req, res) => {
 	}
 
 	const currentTimeUtc = moment().utc();
+	console.log('🚀 ~ app.get ~ currentTimeUtc:', currentTimeUtc);
 	const expirationTimeUtc = moment(link.expiresAt).utc();
+	console.log('🚀 ~ app.get ~ expirationTimeUtc:', expirationTimeUtc);
 
 	if (link.expiresAt && currentTimeUtc.isAfter(expirationTimeUtc)) {
 		return res.status(410).json({ error: 'Link expired' });
