@@ -50,7 +50,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -60,7 +60,7 @@ app.set('views', join(__dirname, 'views'));
 
 app.use(express.static(join(__dirname, 'public')));
 
-const allowedOrigins = ['http://localhost:5005'];
+const allowedOrigins = ['https://shorturl.sbelaya.ru'];
 
 app.use(
 	cors({
@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
 
 /**
  * @swagger
- * /api/shorten:
+ * /shorten:
  *   post:
  *     summary: Create a shortened URL
  *     description: Accepts original URL and alias, returns a shortened URL.
@@ -123,7 +123,7 @@ app.get('/', (req, res) => {
  *       403:
  *         description: Alias already exists
  */
-app.post('/api/shorten', async (req, res) => {
+app.post('/shorten', async (req, res) => {
 	const { error, value } = validateShortenRequest(req.body);
 
 	if (error) {
@@ -151,7 +151,7 @@ app.post('/api/shorten', async (req, res) => {
 
 /**
  * @swagger
- * /api/{shortUrl}:
+ * /{shortUrl}:
  *   get:
  *     summary: Redirect to the original URL
  *     parameters:
@@ -168,7 +168,7 @@ app.post('/api/shorten', async (req, res) => {
  *       410:
  *         description: Link expired
  */
-app.get('/api/:shortUrl', async (req, res) => {
+app.get('/:shortUrl', async (req, res) => {
 	const { shortUrl } = req.params;
 	const links = readData();
 	const link = links.find((l) => l.shortUrl === formatShortUrl(shortUrl));
@@ -192,7 +192,7 @@ app.get('/api/:shortUrl', async (req, res) => {
 
 /**
  * @swagger
- * /api/info/{shortUrl}:
+ * /info/{shortUrl}:
  *   get:
  *     summary: Get information about a shortened URL
  *     parameters:
@@ -222,7 +222,7 @@ app.get('/api/:shortUrl', async (req, res) => {
  *       404:
  *         description: Short URL not found
  */
-app.get('/api/info/:shortUrl', async (req, res) => {
+app.get('/info/:shortUrl', async (req, res) => {
 	const { shortUrl } = req.params;
 	const link = findByShortUrl(shortUrl);
 
@@ -240,7 +240,7 @@ app.get('/api/info/:shortUrl', async (req, res) => {
 
 /**
  * @swagger
- * /api/delete/{shortUrl}:
+ * /delete/{shortUrl}:
  *   delete:
  *     summary: Delete a shortened URL
  *     parameters:
@@ -255,7 +255,7 @@ app.get('/api/info/:shortUrl', async (req, res) => {
  *       404:
  *         description: Short URL not found
  */
-app.delete('/api/delete/:shortUrl', async (req, res) => {
+app.delete('/delete/:shortUrl', async (req, res) => {
 	const { shortUrl } = req.params;
 
 	const deleted = deleteByShortUrl(shortUrl);
@@ -271,7 +271,7 @@ app.delete('/api/delete/:shortUrl', async (req, res) => {
 
 /**
  * @swagger
- * /api/analytics/{shortUrl}:
+ * /analytics/{shortUrl}:
  *   get:
  *     summary: Get analytics for a shortened URL
  *     parameters:
@@ -303,7 +303,7 @@ app.delete('/api/delete/:shortUrl', async (req, res) => {
  *       404:
  *         description: Short URL not found
  */
-app.get('/api/analytics/:shortUrl', async (req, res) => {
+app.get('/analytics/:shortUrl', async (req, res) => {
 	const { shortUrl } = req.params;
 
 	if (!shortUrl) {

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const analyticsForm = document.getElementById('analytics-form');
 	const deleteForm = document.getElementById('delete-form');
 	const infoForm = document.getElementById('info-form');
-	const backendUrl = 'http://localhost:5005';
+	const backendUrl = 'https://shorturl.sbelaya.ru';
 
 	function displayMessage(elementId, message, isError = false) {
 		const element = document.getElementById(elementId);
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const shortenedUrlSpan = document.getElementById('shortened-url');
 		const copyButton = document.getElementById('copy-button');
 
-		const response = await fetch(`${backendUrl}/api/shorten`, {
+		const response = await fetch(`${backendUrl}/shorten`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		try {
 			const response = await fetch(
-				`${backendUrl}/api/analytics/${shortCode}`
+				`${backendUrl}/analytics/${shortCode}`
 			);
 			const data = await response.json();
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const deleteUrl = document.getElementById('deleteUrl');
 		const shortCode = deleteUrl.value.split('/').pop();
 
-		const response = await fetch(`${backendUrl}/api/delete/${shortCode}`, {
+		const response = await fetch(`${backendUrl}/delete/${shortCode}`, {
 			method: 'DELETE',
 		});
 		const data = await response.json();
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		try {
 			const shortCode = infoUrl.value.split('/').pop();
 
-			const response = await fetch(`${backendUrl}/api/info/${shortCode}`);
+			const response = await fetch(`${backendUrl}/info/${shortCode}`);
 
 			if (response.ok) {
 				const data = await response.json();
