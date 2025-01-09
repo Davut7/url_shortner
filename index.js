@@ -177,7 +177,10 @@ app.get('/:shortUrl', async (req, res) => {
 		return res.status(404).json({ error: 'Short URL not found' });
 	}
 
-	if (link.expiresAt && new Date() > new Date(link.expiresAt)) {
+	const currentTimeUtc = new Date().toISOString();
+	const expirationTimeUtc = new Date(link.expiresAt).toISOString();
+
+	if (link.expiresAt && currentTimeUtc > expirationTimeUtc) {
 		return res.status(410).json({ error: 'Link expired' });
 	}
 

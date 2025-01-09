@@ -2,5 +2,6 @@
 /node_modules
 .vscode
 
-analytics.json
+
 urls.json
+analytics.json
