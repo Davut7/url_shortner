@@ -1,0 +1,61 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title URL Shortener
+    link(rel="stylesheet" href="/index.css")
+  body
+    .container
+      h1 URL Shortener
+
+      #shorten-section
+        h2 Shorten Your URL
+        form#shorten-form
+          label(for="originalUrl") Original URL:
+          input(type="url" id="originalUrl" required)
+
+          label(for="alias") Alias (Optional):
+          input(type="text" id="alias")
+
+          label(for="expiresAt") Expires At (Optional):
+          input(type="datetime-local" id="expiresAt")
+
+          button(type="submit") Shorten
+
+        p#shortened-result
+          span#shortened-url
+          button#copy-button(type="button" hidden) Copy
+
+      #analytics-section
+        h2 View Analytics
+        form#analytics-form
+          label(for="analyticsUrl") Short URL:
+          input(type="text" id="analyticsUrl" required)
+
+          button(type="submit") Get Analytics
+
+        p#analytics-result
+
+
+      #delete-section
+        h2 Delete Short URL
+        form#delete-form
+          label(for="deleteUrl") Short URL to Delete:
+          input(type="text" id="deleteUrl" required)
+
+          button(type="submit") Delete URL
+
+        p#delete-result
+
+      #info-section
+        h2 View URL Info
+        form#info-form
+          label(for="infoUrl") Short URL:
+          input(type="text" id="infoUrl" required)
+
+          button(type="submit") Get Info
+
+        p#info-result
+
+  script(src="/script.js")
