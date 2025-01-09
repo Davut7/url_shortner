@@ -72,6 +72,7 @@ export const findByShortUrl = (shortUrl) => {
 
 export const addLink = (originalUrl, shortUrl, expiresAt) => {
 	const data = readData();
+
 	const newLink = {
 		originalUrl,
 		shortUrl,
@@ -79,8 +80,10 @@ export const addLink = (originalUrl, shortUrl, expiresAt) => {
 		clickCount: 0,
 		createdAt: moment().utc(),
 	};
+
 	data.push(newLink);
 	writeData(data);
+
 	return newLink;
 };
 

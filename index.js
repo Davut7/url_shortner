@@ -133,18 +133,19 @@ app.post('/shorten', async (req, res) => {
 
 	const { originalUrl, alias, expiresAt } = value;
 
-	let expiresAtDate = expiresAt ? moment(expiresAt).utc() : null;
+	let expiresAtDate = expiresAt ? moment.utc(expiresAt) : null;
 
 	const shortUrl = await ensureUniqueShortUrl(alias);
 	if (!shortUrl) {
-		return res.status(403).json({
-			message: 'Url with this alias already exists',
-		});
+		return res
+			.status(403)
+			.json({ message: 'Url with this alias already exists' });
 	}
 
 	if (!expiresAtDate) {
 		expiresAtDate = moment().utc().add(1, 'days');
 	}
+
 	const newLink = addLink(originalUrl, shortUrl, expiresAtDate);
 
 	return res.status(201).json({ shortUrl: newLink.shortUrl });
@@ -171,6 +172,7 @@ app.post('/shorten', async (req, res) => {
  */
 app.get('/:shortUrl', async (req, res) => {
 	const { shortUrl } = req.params;
+
 	const links = readData();
 	const link = links.find((l) => l.shortUrl === formatShortUrl(shortUrl));
 
@@ -180,15 +182,17 @@ app.get('/:shortUrl', async (req, res) => {
 
 	const currentTimeUtc = moment().utc();
 	console.log('🚀 ~ app.get ~ currentTimeUtc:', currentTimeUtc);
-	const expirationTimeUtc = moment(link.expiresAt).utc();
-	console.log('🚀 ~ app.get ~ expirationTimeUtc:', expirationTimeUtc);
 
-	if (link.expiresAt && currentTimeUtc.isAfter(expirationTimeUtc)) {
+	const expirationTimeUtc = link.expiresAt
+		? moment.utc(link.expiresAt)
+		: null;
+
+	console.log('🚀 ~ app.get ~ expirationTimeUtc:', expirationTimeUtc);
+	if (expirationTimeUtc && currentTimeUtc.isAfter(expirationTimeUtc)) {
 		return res.status(410).json({ error: 'Link expired' });
 	}
 
 	link.clickCount += 1;
-
 	writeData(links);
 
 	addLinkAnalytics(link.shortUrl, req.ip, moment().utc());
