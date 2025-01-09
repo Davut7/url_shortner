@@ -133,6 +133,10 @@ app.post('/shorten', async (req, res) => {
 
 	const { originalUrl, alias, expiresAt } = value;
 
+	console.log('Received originalUrl:', req.body.originalUrl);
+	console.log('Received alias:', req.body.alias);
+	console.log('Received expiresAt:', req.body.expiresAt);
+
 	let expiresAtDate = expiresAt ? moment.utc(expiresAt) : null;
 
 	const shortUrl = await ensureUniqueShortUrl(alias);

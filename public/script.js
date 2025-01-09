@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		let expiresAtUtc = null;
 		if (expiresAt.value) {
-			const localTime = new Date(expiresAt.value);
-			expiresAtUtc = new Date(
-				localTime.getTime() + localTime.getTimezoneOffset() * 60000
+			const expiresAt = new Date(
+				document.getElementById('expiresAt').value
 			).toISOString();
+			console.log('Client-side expiresAt:', expiresAt);
 		}
 
 		const response = await fetch(`${backendUrl}/shorten`, {
