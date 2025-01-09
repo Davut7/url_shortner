@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { readFileSync, writeFileSync } from 'fs';
 import Joi from 'joi';
+import moment from 'moment';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -76,7 +77,7 @@ export const addLink = (originalUrl, shortUrl, expiresAt) => {
 		shortUrl,
 		expiresAt: expiresAt || null,
 		clickCount: 0,
-		createdAt: new Date(),
+		createdAt: moment().utc(),
 	};
 	data.push(newLink);
 	writeData(data);

@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import moment from 'moment';
 import { dirname, join } from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -132,7 +133,7 @@ app.post('/shorten', async (req, res) => {
 
 	const { originalUrl, alias, expiresAt } = value;
 
-	let expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+	let expiresAtDate = expiresAt ? moment(expiresAt).utc() : null;
 
 	const shortUrl = await ensureUniqueShortUrl(alias);
 	if (!shortUrl) {
@@ -142,7 +143,7 @@ app.post('/shorten', async (req, res) => {
 	}
 
 	if (!expiresAtDate) {
-		expiresAtDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+		expiresAtDate = moment().utc().add(1, 'days');
 	}
 	const newLink = addLink(originalUrl, shortUrl, expiresAtDate);
 
@@ -177,10 +178,10 @@ app.get('/:shortUrl', async (req, res) => {
 		return res.status(404).json({ error: 'Short URL not found' });
 	}
 
-	const currentTimeUtc = new Date().toISOString();
-	const expirationTimeUtc = new Date(link.expiresAt).toISOString();
+	const currentTimeUtc = moment().utc();
+	const expirationTimeUtc = moment(link.expiresAt).utc();
 
-	if (link.expiresAt && currentTimeUtc > expirationTimeUtc) {
+	if (link.expiresAt && currentTimeUtc.isAfter(expirationTimeUtc)) {
 		return res.status(410).json({ error: 'Link expired' });
 	}
 
@@ -188,7 +189,7 @@ app.get('/:shortUrl', async (req, res) => {
 
 	writeData(links);
 
-	addLinkAnalytics(link.shortUrl, req.ip, new Date());
+	addLinkAnalytics(link.shortUrl, req.ip, moment().utc());
 
 	res.redirect(link.originalUrl);
 });
